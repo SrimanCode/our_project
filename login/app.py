@@ -6,6 +6,12 @@ app.secret_key = "your_secret_key"  # Replace with a secret key for session mana
 # Simulated user data (replace with a real user database)
 users = {
     "admin": "password123",
+    "patient1": "patient1"
+}
+
+patient_details = {
+    "admin":1,
+    "patient1":0
 }
 
 @app.route('/')
@@ -39,14 +45,44 @@ def patient_login():
 def dashboard(name):
     if "user" in session:
         username = session["user"]
-        return render_template('dashboard.html', username=username)
+        if username in patient_details and patient_details[username] == 1:
+            return render_template('dashboard_with_video_upload.html', username=username)
+        else:
+            return render_template('dashboard_with_form.html', username=username)
     else:
         return redirect(url_for('patient_login'))
 
 @app.route('/logout')
 def logout():
     session.pop("user", None)
+    session.clear()
     return redirect(url_for('patient_login'))
+
+@app.route('/submit-answers', methods=['POST'])
+def submit_answers():
+    if "user" in session:
+        if request.method == 'POST':
+            question1 = request.form.get("question1")
+            question2 = request.form.get("question2")
+            question3 = request.form.get("question3")
+            # You can now process and store the answers as needed
+            return render_template('submission_success.html')
+    else:
+        return redirect(url_for('patient_login'))
+    
+@app.route('/upload-video', methods=['POST'])
+def upload_video():
+    if "user" in session:
+        if request.method == 'POST':
+            # Handle the video upload here
+            uploaded_video = request.files['video']
+            if uploaded_video:
+                pass
+    else:
+        return redirect(url_for('patient_login'))
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
