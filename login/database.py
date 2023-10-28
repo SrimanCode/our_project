@@ -62,7 +62,7 @@ def createTable(conn):
             )
             conn.commit()  # Commit the transaction
             print("Table 'patients' created successfully.")
-        except psycopg.Error as e:
+        except psycopg2.Error as e:
             conn.rollback()  # Rollback the transaction in case of an error
             print(f"Error creating table: {e}")
         # cur.execute(
