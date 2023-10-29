@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+import database
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Replace with a secret key for session management
@@ -32,7 +33,7 @@ def patient_login():
     if request.method == 'POST':
         username = request.form.get("username")
         password = request.form.get("password")
-        if username in users and users[username] == password:
+        if database.patient_login_check(username,password):
             session["user"] = username
             return redirect(url_for('dashboard',name = username))
         else:

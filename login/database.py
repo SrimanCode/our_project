@@ -9,7 +9,7 @@ import psycopg2
 from psycopg2.extras import NamedTupleCursor
 from psycopg2.errors import SerializationFailure, Error
 #from psycopg2.rows import namedtuple_row
-db_url = "postgresql://calhack:Ucdc5Rfgws0pVlEk8bdAsg@bumble-stag-3694.g95.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full"
+db_url = "postgresql://calhack:Ucdc5Rfgws0pVlEk8bdAsg@bumble-stag-3694.g95.cockroachlabs.cloud:26257/calhack?sslmode=verify-full"
 
 def createConn():
     try: 
@@ -58,10 +58,10 @@ def createTable(conn):
     with conn.cursor() as cur:
         try:
             cur.execute(
-                "CREATE TABLE IF NOT EXISTS patients (id UUID PRIMARY KEY, name VARCHAR(30), therapist VARCHAR(30))"
+                "CREATE TABLE IF NOT EXISTS sample (id UUID PRIMARY KEY, name VARCHAR(30), therapist VARCHAR(30))"
             )
             conn.commit()  # Commit the transaction
-            print("Table 'patients' created successfully.")
+            print("Table 'sample' created successfully.")
         except psycopg2.Error as e:
             conn.rollback()  # Rollback the transaction in case of an error
             print(f"Error creating table: {e}")
@@ -71,7 +71,24 @@ def createTable(conn):
         #               cur.statusmessage)
     return [id1, id2]
 
-if __name__ == '__main__':
+
+
+def patient_login_check(username,password):
     conn = createConn()
-    createTable(conn)
+    with conn.cursor() as cur:
+        try:
+            cur.execute(f"SELECT * FROM patient where username ='{username}' and password = '{password}'")  # Replace 'table' with your actual table name
+            rows = cur.fetchall()  # Fetch all rows from the result set
+            if(len(rows)>0):
+                id = rows[0].id
+                name = rows[0].name
+
+                # You can do something with the retrieved data here
+                print(f"ID: {id}, Name: {name}")
+                return True
+            else:
+                return False
+        except psycopg2.Error as e:
+            print(f"Error executing SELECT query: {e}")
     conn.close()
+
