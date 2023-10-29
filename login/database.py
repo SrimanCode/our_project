@@ -4,6 +4,7 @@ import random
 import time
 import uuid
 from argparse import ArgumentParser, RawTextHelpFormatter
+import random
 
 import psycopg2
 from psycopg2.extras import NamedTupleCursor
@@ -92,3 +93,30 @@ def patient_login_check(username,password):
             print(f"Error executing SELECT query: {e}")
     conn.close()
 
+def patient_insert_data(patient,question1, question2, question3, question4):
+    conn = createConn()
+    with conn.cursor() as cur:
+        try:
+            cur.execute(f"SELECT * FROM patient where username ='{patient}''") 
+            rows = cur.fetchall()
+            id = ""
+            if(len(rows)>0):
+                id = rows[0].id
+            random_element = random.choice(range(0,100))
+            # Define the INSERT query
+            if(id!=""):
+                insert_query = f"""
+                    INSERT INTO your_table 
+                    VALUES ({random_element},{id},NULL,{question1}, {question2}, {question3}, {question4}, NULL);
+                """
+
+                # Execute the INSERT query with the provided data
+                cur.execute(insert_query)
+
+                # Commit the transaction
+                conn.commit()
+
+            print("Data inserted successfully.")
+        except psycopg.Error as e:
+            print(f"Error executing INSERT query: {e}")
+    conn.close()
