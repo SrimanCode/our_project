@@ -94,14 +94,16 @@ def patient_login_check(username,password):
     conn.close()
 
 def patient_insert_data(patient,question1, question2, question3, question4):
+    print("inside func")
     conn = createConn()
     with conn.cursor() as cur:
         try:
-            cur.execute(f"SELECT * FROM patient where username ='{patient}''") 
+            cur.execute(f"SELECT * FROM patient where name ='{patient}'") 
             rows = cur.fetchall()
             id = ""
             if(len(rows)>0):
                 id = rows[0].id
+                print(id)
             random_element = random.choice(range(0,100))
             # Define the INSERT query
             if(id!=""):

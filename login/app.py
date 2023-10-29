@@ -85,6 +85,17 @@ def upload_video():
     else:
         return redirect(url_for('patient_login'))
 
+@app.route('/upload-video-link', methods=['POST'])
+def upload_video_link():
+    if "user" in session:
+        if request.method == 'POST':
+            video_link = request.form.get("video-link")
+            
+            # Now you can process and store the video link as needed
+            
+            return render_template('submission_success.html')
+    else:
+        return redirect(url_for('patient_login'))
 
 
 

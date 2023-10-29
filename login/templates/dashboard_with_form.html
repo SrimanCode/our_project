@@ -41,11 +41,13 @@
     </div>
 
     <div id="video-upload-form" style="display: none;">
-        <h2>Upload a Video:</h2>
-        <form method="post" action="{{ url_for('upload_video') }}" enctype="multipart/form-data">
-            <input type="file" name="video" accept="video/*" required>
-            <input type="submit" value="Upload">
+        <h2>Submit a Video Link:</h2>
+        <form method="post" action="{{ url_for('upload_video_link') }}">
+            <label for="video-link">Video Link:</label>
+            <input type="text" name="video-link" id="video-link" required>
+            <input type="submit" value="Submit">
         </form>
     </div>
+    
 </body>
 </html>
