@@ -139,3 +139,23 @@ def session_check_data(username):
         except psycopg.Error as e:
             print(f"Error executing INSERT query: {e}")
     conn.close()
+
+
+def therapist_login_check(username,password):
+    conn = createConn()
+    with conn.cursor() as cur:
+        try:
+            cur.execute(f"SELECT * FROM therapist where username ='{username}' and password = '{password}'")  # Replace 'table' with your actual table name
+            rows = cur.fetchall()  # Fetch all rows from the result set
+            if(len(rows)>0):
+                id = rows[0].id
+                name = rows[0].name
+
+                # You can do something with the retrieved data here
+                print(f"ID: {id}, Name: {name}")
+                return True
+            else:
+                return False
+        except psycopg2.Error as e:
+            print(f"Error executing SELECT query: {e}")
+    conn.close()

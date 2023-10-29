@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enter Filename</title>
+</head>
+<body>
+    <h1>Welcome, {{ username }}!</h1>
+    <p>You are now logged in as a therapist.</p>
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    <h2>Enter Filename:</h2>
+    <form method="post" action="{{ url_for('enter_filename') }}">
+        <label for="filename">Filename:</label>
+        <input type="text" name="filename" id="filename" required>
+        <input type="submit" value="Submit">
+    </form>
+    <!-- In your template, where you want to display the processed file name -->
+    {% if processed_file_name %}
+    <ul>
+        {% for key, value in processed_file_name.items() %}
+            <li>{{ key }} = {{ value }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</body>
+</html>

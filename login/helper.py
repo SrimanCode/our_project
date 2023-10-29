@@ -67,6 +67,8 @@ def lookup(link):
         print("Distress Score:", distress_score)
         print("Sadness Score:", sadness_score)
 
+        
+
         #trainable
         weights = {
             'Anxiety': 0.2,
@@ -85,17 +87,25 @@ def lookup(link):
             weights['Distress'] * distress_score +
             weights['Sadness'] * sadness_score) / total_weight
         )
-        
-        print("AVG: ", weighted_average)
+
+        output = { "Anxiety Score:": anxiety_score,
+            "Guilt Score:": guilt_score,
+            "Tiredness Score:": tiredness_score,
+            "Anxiety Score:":  anxiety_score,
+            "Distress Score:": distress_score,
+            "Sadness Score:": sadness_score,
+            "Weighted Average" :weighted_average
+        }
+        return output
 
     except requests.RequestException:
         return None
 
 
-def create_signed_url():
+def create_signed_url(object_file):
     # Your Google Cloud Storage information
     bucket_name = "calhacks2023"
-    object_name = "expression1.mp4"
+    object_name = object_file
     google_cloud_credentials_file = "GOOGLE_APPLICATION_CREDENTIALS.json"
     # Create a client using your Google Cloud credentials
     client = storage.Client.from_service_account_json(google_cloud_credentials_file)
@@ -113,7 +123,3 @@ def create_signed_url():
     print("Signed URL:", signed_url)
 
     return signed_url
-
-if __name__ == '__main__':
-    link = create_signed_url()
-    lookup(link)
