@@ -66,6 +66,7 @@ def submit_answers():
             question1 = request.form.get("question1")
             question2 = request.form.get("question2")
             question3 = request.form.get("question3")
+            question4 = request.form.get("question4")
             # You can now process and store the answers as needed
             return render_template('submission_success.html')
     else:
