@@ -108,7 +108,7 @@ def patient_insert_data(patient,question1, question2, question3, question4):
             # Define the INSERT query
             if(id!=""):
                 insert_query = f"""
-                    INSERT INTO your_table 
+                    INSERT INTO session 
                     VALUES ({random_element},{id},NULL,{question1}, {question2}, {question3}, {question4}, NULL);
                 """
 

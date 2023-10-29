@@ -7,6 +7,9 @@ from hume import HumeBatchClient
 from hume.models.config import FaceConfig
 from hume.models.config import ProsodyConfig
 
+from google.cloud import storage
+from datetime import datetime, timedelta
+
 def login_required(f):
     """
     Decorate routes to require login.
@@ -44,6 +47,7 @@ def lookup(link):
 
         emotions = emoList[0]['results']['predictions'][0]['models']['face']['grouped_predictions'][0]['predictions'][0]['emotions']
 
+        print("Emotion",emotions)
         for emotion in emotions:
             if emotion['name'] == 'Anxiety':
                 anxiety_score = emotion['score']
@@ -86,3 +90,30 @@ def lookup(link):
 
     except requests.RequestException:
         return None
+
+
+def create_signed_url():
+    # Your Google Cloud Storage information
+    bucket_name = "calhacks2023"
+    object_name = "expression1.mp4"
+    google_cloud_credentials_file = "GOOGLE_APPLICATION_CREDENTIALS.json"
+    # Create a client using your Google Cloud credentials
+    client = storage.Client.from_service_account_json(google_cloud_credentials_file)
+    # Get a reference to the bucket
+    bucket = client.get_bucket(bucket_name)
+    # Get a reference to the object
+    blob = bucket.blob(object_name)
+    # Set the expiration time for the signed URL
+    expiration = datetime.utcnow() + timedelta(hours=1)  # Adjust the expiration time as needed
+    # Generate the signed URL
+    signed_url = blob.generate_signed_url(
+        expiration=expiration,
+        method='GET'
+    )
+    print("Signed URL:", signed_url)
+
+    return signed_url
+
+if __name__ == '__main__':
+    link = create_signed_url()
+    lookup(link)
