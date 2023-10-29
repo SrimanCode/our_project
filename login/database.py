@@ -93,7 +93,7 @@ def patient_login_check(username,password):
             print(f"Error executing SELECT query: {e}")
     conn.close()
 
-def patient_insert_data(patient,question1, question2, question3, question4):
+def patient_insert_data(patient,question1, question2, question3, question4,video_link):
     print("inside func")
     conn = createConn()
     with conn.cursor() as cur:
@@ -109,7 +109,7 @@ def patient_insert_data(patient,question1, question2, question3, question4):
             if(id!=""):
                 insert_query = f"""
                     INSERT INTO session 
-                    VALUES ({random_element},{id},NULL,{question1}, {question2}, {question3}, {question4}, NULL);
+                    VALUES ({random_element},{id},NULL,{question1}, {question2}, {question3}, {question4}, {video_link});
                 """
 
                 # Execute the INSERT query with the provided data
@@ -119,6 +119,23 @@ def patient_insert_data(patient,question1, question2, question3, question4):
                 conn.commit()
 
             print("Data inserted successfully.")
+        except psycopg.Error as e:
+            print(f"Error executing INSERT query: {e}")
+    conn.close()
+
+def session_check_data(username):
+    #print("inside func")
+    conn = createConn()
+    with conn.cursor() as cur:
+        try:
+            query =  """SELECT * from session where paitientid in (SELECT id FROM patient where username ='{username}')"""
+            #print("Query:", query)
+            cur.execute(f"SELECT * from session where paitientid in (SELECT id FROM patient where username ='"+ username + "')") 
+            rows = cur.fetchall()
+            if(len(rows)>0):
+                return True
+            else:
+                return False
         except psycopg.Error as e:
             print(f"Error executing INSERT query: {e}")
     conn.close()

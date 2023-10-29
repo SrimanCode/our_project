@@ -30,6 +30,34 @@
         document.querySelector("form").addEventListener("submit", function (event) {
             event.preventDefault(); // Prevent the form from submitting normally
             // You can add code here to handle the form submission and show the success message
+            // Retrieve values from the form elements
+            const question1Value = document.getElementById("question1").value;
+            const question2Value = document.getElementById("question2").value;
+            const question3Value = document.getElementById("question3").value;
+            const question4Value = document.getElementById("question4").value;
+
+            // Create a data object with the form values
+            const formData = new FormData();
+            formData.append("question1", question1Value);
+            formData.append("question2", question2Value);
+            formData.append("question3", question3Value);
+            formData.append("question4", question4Value);
+
+            // Send a POST request to the Flask route
+            fetch("/submit-answers", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json()) // Optional: Parse the response if needed
+            .then(data => {
+                // Handle the response data here (e.g., show a success message)
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle any errors here
+                console.error(error);
+            });
+
             document.querySelector("form").style.display = "none";
             document.getElementById("success-message").style.display = "block";
             document.getElementById("video-upload-form").style.display = "block";
@@ -48,6 +76,13 @@
             <input type="submit" value="Submit">
         </form>
     </div>
+
+    <script>
+        document.getElementById("video-upload-form").addEventListener("click", function () {
+            // Add your code here to handle the video upload
+        });
+    </script>
+    
     
 </body>
 </html>

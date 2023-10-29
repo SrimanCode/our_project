@@ -46,7 +46,7 @@ def patient_login():
 def dashboard(name):
     if "user" in session:
         username = session["user"]
-        if username in patient_details and patient_details[username] == 1:
+        if database.session_check_data(username):
             return render_template('dashboard_with_video_upload.html', username=username)
         else:
             return render_template('dashboard_with_form.html', username=username)
@@ -59,8 +59,9 @@ def logout():
     session.clear()
     return redirect(url_for('patient_login'))
 
-@app.route('/submit-answers', methods=['POST'])
+@app.route('/submit_answers', methods=['POST'])
 def submit_answers():
+    print("in app route")
     if "user" in session:
         if request.method == 'POST':
             question1 = request.form.get("question1")
@@ -70,20 +71,12 @@ def submit_answers():
 
             database.patient_insert_data(session["user"],question1,question2,question3,question4)
             # You can now process and store the answers as needed
+            response_data = {"message": "Data received and processed successfully"}
+       
             return render_template('submission_success.html')
     else:
         return redirect(url_for('patient_login'))
-    
-@app.route('/upload-video', methods=['POST'])
-def upload_video():
-    if "user" in session:
-        if request.method == 'POST':
-            # Handle the video upload here
-            uploaded_video = request.files['video']
-            if uploaded_video:
-                pass
-    else:
-        return redirect(url_for('patient_login'))
+
 
 @app.route('/upload-video-link', methods=['POST'])
 def upload_video_link():
