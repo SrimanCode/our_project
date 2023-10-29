@@ -47,7 +47,6 @@ def lookup(link):
 
         emotions = emoList[0]['results']['predictions'][0]['models']['face']['grouped_predictions'][0]['predictions'][0]['emotions']
 
-        print("Emotion",emotions)
         for emotion in emotions:
             if emotion['name'] == 'Anxiety':
                 anxiety_score = emotion['score']
@@ -60,6 +59,8 @@ def lookup(link):
             elif emotion['name'] == 'Sadness':
                 sadness_score = emotion['score']
         
+        average = (anxiety_score + guilt_score + tiredness_score + anxiety_score + distress_score + sadness_score) / 5
+
         print("Anxiety Score:", anxiety_score)
         print("Guilt Score:", guilt_score)
         print("Tiredness Score:", tiredness_score)
@@ -71,7 +72,7 @@ def lookup(link):
 
         #trainable
         weights = {
-            'Anxiety': 0.2,
+            'Anxiety': 0.5,
             'Guilt': 0.15,
             'Tiredness': 0.15,
             'Distress': 0.15,
@@ -123,3 +124,4 @@ def create_signed_url(object_file):
     print("Signed URL:", signed_url)
 
     return signed_url
+
